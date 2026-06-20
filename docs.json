@@ -26,6 +26,10 @@
       {
         "group": "SDKs",
         "pages": ["sdks/overview", "sdks/react", "sdks/javascript"]
+      },
+      {
+        "group": "CLI",
+        "pages": ["cli/overview", "cli/commands"]
       }
     ]
   },
