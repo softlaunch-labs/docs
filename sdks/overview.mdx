@@ -1,0 +1,63 @@
+---
+title: "SDK overview"
+description: "Choose an SDK and learn the API shared across all of them."
+---
+
+Softlaunch SDKs load your configuration snapshot and evaluate flags locally. Pick the SDK that matches where your code runs.
+
+## Client vs. server
+
+<CardGroup cols={2}>
+  <Card title="Client SDKs" icon="globe">
+    Run in browsers, mobile apps, and other public clients. Use a **client key** (`slc_`), which serves an obfuscated configuration.
+  </Card>
+  <Card title="Server SDKs" icon="server">
+    Run in trusted backends. Use a **server key** (`sls_`), which reads the full configuration. Keep it secret.
+  </Card>
+</CardGroup>
+
+## Available SDKs
+
+<CardGroup cols={2}>
+  <Card title="React" icon="react" href="/sdks/react">
+    `@softlaunch/react` — a provider and hooks for React apps.
+  </Card>
+  <Card title="JavaScript" icon="js" href="/sdks/javascript">
+    `@softlaunch/js` — a client for any JavaScript runtime.
+  </Card>
+</CardGroup>
+
+More SDKs are on the way:
+
+<CardGroup cols={3}>
+  <Card title="Node.js" icon="node-js">
+    Coming soon
+  </Card>
+  <Card title="Go" icon="golang">
+    Coming soon
+  </Card>
+  <Card title="Python" icon="python">
+    Coming soon
+  </Card>
+</CardGroup>
+
+## A shared API
+
+Every SDK exposes one typed accessor per [flag type](/concepts/feature-flags). The arguments are the same everywhere:
+
+```ts
+get<Type>Flag(flagKey, subjectKey, attributes, defaultValue);
+```
+
+| Argument | Description |
+| --- | --- |
+| `flagKey` | The key of the flag to evaluate. |
+| `subjectKey` | A stable identifier for the user or entity. |
+| `attributes` | Key–value attributes used for [targeting](/concepts/targeting). |
+| `defaultValue` | Returned while loading, or if the flag is missing or mistyped. |
+
+The typed accessors are `getBooleanFlag`, `getStringFlag`, `getIntegerFlag`, `getNumericFlag`, and `getJsonFlag` (the React SDK exposes the same set as hooks: `useBooleanFlag`, and so on).
+
+<Note>
+  SDKs stay subscribed after the first load. When you change a flag, connected SDKs receive the update in real time and re-evaluate.
+</Note>

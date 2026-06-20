@@ -1,0 +1,9 @@
+# Dependencies
+node_modules/
+
+# Mintlify local preview cache
+.mint/
+
+# Editor-specific skill mirrors (regenerated from .agents)
+.claude/
+.windsurf/

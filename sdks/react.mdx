@@ -1,0 +1,98 @@
+---
+title: "React"
+description: "Add Softlaunch feature flags to a React app."
+---
+
+The React SDK provides a provider and a set of hooks. Flags re-evaluate automatically when your configuration changes, so your components always render the current value.
+
+## Install
+
+<CodeGroup>
+  ```bash npm
+  npm install @softlaunch/react
+  ```
+
+  ```bash pnpm
+  pnpm add @softlaunch/react
+  ```
+
+  ```bash yarn
+  yarn add @softlaunch/react
+  ```
+</CodeGroup>
+
+## Set up the provider
+
+Wrap your app in `SoftlaunchProvider` with a [client key](/concepts/environments) (`slc_`). The provider loads your configuration and keeps it up to date.
+
+```tsx
+import { SoftlaunchProvider } from "@softlaunch/react";
+
+export function App() {
+  return (
+    <SoftlaunchProvider sdkKey="slc_...">
+      <YourApp />
+    </SoftlaunchProvider>
+  );
+}
+```
+
+## Read a flag
+
+Each [flag type](/concepts/feature-flags) has a hook. Pass the flag key, a subject key, attributes, and a default value.
+
+```tsx
+import { useBooleanFlag } from "@softlaunch/react";
+
+function Checkout() {
+  const { value: showRedesign } = useBooleanFlag(
+    "checkout-redesign",
+    "user-123",
+    { plan: "pro" },
+    false,
+  );
+
+  return showRedesign ? <NewCheckout /> : <OldCheckout />;
+}
+```
+
+Available hooks:
+
+- `useBooleanFlag(flagKey, subjectKey, attributes, defaultValue)`
+- `useStringFlag(flagKey, subjectKey, attributes, defaultValue)`
+- `useIntegerFlag(flagKey, subjectKey, attributes, defaultValue)`
+- `useNumericFlag(flagKey, subjectKey, attributes, defaultValue)`
+- `useJsonFlag<T>(flagKey, subjectKey, attributes, defaultValue)`
+
+## The result object
+
+Every hook returns the same shape:
+
+```ts
+interface FlagResult<T> {
+  value: T;
+  isLoading: boolean;
+  isFetching: boolean;
+  error: string | undefined;
+}
+```
+
+| Field | Description |
+| --- | --- |
+| `value` | The resolved variation, or your default value. |
+| `isLoading` | `true` during the first load, before any configuration is available. |
+| `isFetching` | `true` while refreshing in the background. `value` stays usable from the previous configuration. |
+| `error` | A message if the configuration failed to load, otherwise `undefined`. |
+
+```tsx
+function Banner() {
+  const { value, isLoading } = useStringFlag("banner-message", "user-123", {}, "");
+
+  if (isLoading) return null;
+  return value ? <div className="banner">{value}</div> : null;
+}
+```
+
+<Note>
+  Hooks re-render when your configuration updates, so you don't need to poll or refresh. Just read `value`.
+</Note>

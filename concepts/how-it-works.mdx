@@ -1,0 +1,51 @@
+---
+title: "How it works"
+description: "How flag configuration flows from the dashboard to your app."
+---
+
+Softlaunch is built around **local evaluation**. Your SDKs don't call an API for every flag check — they hold a snapshot of your configuration and evaluate flags in-process. This keeps evaluations instant and your app fast.
+
+## The flow
+
+<Steps>
+  <Step title="Configure">
+    You define flags, environments, and targeting rules in the dashboard.
+  </Step>
+  <Step title="Compile">
+    Softlaunch compiles each environment's configuration into a compact snapshot whenever it changes.
+  </Step>
+  <Step title="Distribute">
+    The snapshot is served from a global CDN, cached close to your users.
+  </Step>
+  <Step title="Evaluate">
+    Your SDK loads the snapshot once and evaluates flags locally — no network round trip per flag.
+  </Step>
+  <Step title="Update">
+    When configuration changes, connected SDKs receive the new snapshot in real time and re-evaluate.
+  </Step>
+</Steps>
+
+## Why it's built this way
+
+<CardGroup cols={2}>
+  <Card title="Fast" icon="gauge-high">
+    Flags are evaluated in-process. A flag check is a local function call, not a network request.
+  </Card>
+  <Card title="Reliable" icon="shield-check">
+    Configuration is served from a CDN and cached in the SDK, so evaluation keeps working even through network blips.
+  </Card>
+  <Card title="Real-time" icon="bolt">
+    Changes propagate to connected SDKs immediately, without polling.
+  </Card>
+  <Card title="Private" icon="lock">
+    Configuration for public clients is obfuscated, so your targeting logic isn't exposed in the browser.
+  </Card>
+</CardGroup>
+
+## Data isolation
+
+Each organization's data lives in its own isolated, database-per-tenant store. Your flags, environments, and configuration are never colocated with another organization's data.
+
+<Note>
+  Because evaluation happens locally against a cached snapshot, the user attributes you pass to an SDK stay in your application. Softlaunch evaluates flags without those attributes leaving your environment.
+</Note>

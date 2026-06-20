@@ -1,0 +1,46 @@
+---
+title: "Feature flags"
+description: "What flags are, the types they support, and the values they return."
+---
+
+A feature flag is a named switch in your code. Instead of hardcoding behavior, you ask Softlaunch what a flag should return for a given user, and change that answer from the dashboard — no redeploy.
+
+## Flag types
+
+Every flag has a type, set when you create it. The type determines the shape of the value the SDK returns.
+
+| Type | Returns | Example use |
+| --- | --- | --- |
+| `boolean` | `true` or `false` | Gate a feature on or off |
+| `string` | A text value | Choose a variant name, theme, or copy |
+| `integer` | A whole number | A limit, count, or threshold |
+| `numeric` | A decimal number | A rate, multiplier, or price |
+| `json` | A structured object | A bundle of related settings |
+
+Each SDK exposes a typed method per flag type, so you read a flag with the same type you defined. If a flag's type doesn't match the method you call, the SDK returns your default value.
+
+## Variations
+
+A **variation** is a value a flag can return. A boolean flag has two variations (`true` and `false`); other types can have as many as you need — for example a `string` flag with `control`, `treatment-a`, and `treatment-b`.
+
+When you evaluate a flag, Softlaunch resolves it to exactly one variation based on the flag's configuration in that environment.
+
+## Default values
+
+Every SDK call requires a **default value**. The SDK returns it when:
+
+- The configuration hasn't loaded yet.
+- The flag doesn't exist in that environment.
+- The flag's type doesn't match the method you called.
+
+<Note>
+  Choose a default that is safe to serve to every user. It's the value your app falls back to whenever Softlaunch can't return a definitive answer.
+</Note>
+
+## Enabling and disabling
+
+A flag is enabled or disabled **per environment**. A disabled flag serves its configured off value to everyone, regardless of targeting. This lets you keep the same flag configured differently in Staging and Production.
+
+<Card title="Environments and SDK keys" icon="layer-group" href="/concepts/environments">
+  Learn how a flag can behave differently across environments.
+</Card>

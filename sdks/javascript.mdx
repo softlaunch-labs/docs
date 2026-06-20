@@ -1,0 +1,95 @@
+---
+title: "JavaScript"
+description: "Add Softlaunch feature flags to any JavaScript app."
+---
+
+The JavaScript SDK is a framework-agnostic client for browsers and other JavaScript runtimes. It loads your configuration, evaluates flags locally, and stays subscribed for real-time updates.
+
+## Install
+
+<CodeGroup>
+  ```bash npm
+  npm install @softlaunch/js
+  ```
+
+  ```bash pnpm
+  pnpm add @softlaunch/js
+  ```
+
+  ```bash yarn
+  yarn add @softlaunch/js
+  ```
+</CodeGroup>
+
+## Initialize
+
+Create a client with a [client key](/concepts/environments) (`slc_`). `init` returns immediately and starts loading in the background.
+
+```ts
+import { init } from "@softlaunch/js";
+
+const client = init({ sdkKey: "slc_..." });
+```
+
+Flag reads work right away, returning your default value until the configuration is ready. To wait for the first load, await `waitUntilReady`:
+
+```ts
+await client.waitUntilReady();
+```
+
+## Read a flag
+
+Each [flag type](/concepts/feature-flags) has a method. Pass the flag key, a subject key, attributes, and a default value.
+
+```ts
+const showRedesign = client.getBooleanFlag(
+  "checkout-redesign",
+  "user-123",
+  { plan: "pro" },
+  false,
+);
+```
+
+Available methods:
+
+- `getBooleanFlag(flagKey, subjectKey, attributes, defaultValue)`
+- `getStringFlag(flagKey, subjectKey, attributes, defaultValue)`
+- `getIntegerFlag(flagKey, subjectKey, attributes, defaultValue)`
+- `getNumericFlag(flagKey, subjectKey, attributes, defaultValue)`
+- `getJsonFlag<T>(flagKey, subjectKey, attributes, defaultValue)`
+
+## React to changes
+
+The client stays subscribed after the first load. Use `subscribe` to run code whenever flag values may have changed — re-read the flags you care about inside the listener.
+
+```ts
+const unsubscribe = client.subscribe(() => {
+  render(client.getBooleanFlag("checkout-redesign", "user-123", { plan: "pro" }, false));
+});
+
+// Later, stop listening:
+unsubscribe();
+```
+
+## Check status
+
+`getStatus` reports the current load state as a discriminated union:
+
+```ts
+const status = client.getStatus();
+// { state: "initializing" }
+// { state: "ready" }
+// { state: "error", error: string }
+```
+
+## Clean up
+
+Call `close` to tear down the subscription and release resources when the client is no longer needed.
+
+```ts
+client.close();
+```
+
+<Note>
+  Reads always return a value — your default until the configuration loads, and the resolved variation once it's ready. You never need to guard a read against an unready client.
+</Note>

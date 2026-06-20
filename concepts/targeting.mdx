@@ -1,0 +1,49 @@
+---
+title: "Targeting & rollouts"
+description: "Serve different variations to different users and roll out gradually."
+---
+
+Targeting decides which variation a flag returns for a given user. You evaluate a flag against a **subject** — identified by a stable **subject key** and optional **attributes** — and Softlaunch resolves it using the flag's rules.
+
+```ts
+client.getStringFlag(
+  "pricing-experiment",
+  "user-123", // subject key
+  { plan: "pro", country: "US" }, // attributes
+  "control", // default
+);
+```
+
+The subject key should be stable for a user over time (for example, a user ID), so the same user consistently receives the same result.
+
+## Targeting rules
+
+A flag's configuration is an ordered list of **targeting rules**. Each rule matches a set of users by their attributes and serves a variation. Rules are evaluated top to bottom, and the first one that matches wins. If no rule matches, the flag serves its default variation.
+
+A rule matches on **conditions** over attributes — for example, `plan is one of [pro, enterprise]` or `country is US`. Conditions support equality, comparison, list membership, and presence checks.
+
+## Audiences
+
+An **audience** is a reusable, named group defined by conditions — for example, "Beta users" or "Internal staff." Reference an audience from any flag's targeting rules instead of redefining the same conditions each time. Update the audience once, and every flag that uses it reflects the change.
+
+## Percentage rollouts
+
+A targeting rule can serve a variation to a percentage of matching users instead of all of them. This lets you release gradually:
+
+<Steps>
+  <Step title="Start small">
+    Roll a variation out to 5% of users and watch for issues.
+  </Step>
+  <Step title="Ramp up">
+    Increase the percentage over time. Bucketing is consistent — users already in the rollout stay in it as you ramp.
+  </Step>
+  <Step title="Complete">
+    Move to 100% once you're confident.
+  </Step>
+</Steps>
+
+Within a rule you can also split traffic across multiple variations by weight — for example, 50/50 between two options — to compare them on live traffic.
+
+<Note>
+  Rollouts use deterministic bucketing keyed on the subject. The same user lands in the same bucket every time, so their experience stays consistent across evaluations.
+</Note>

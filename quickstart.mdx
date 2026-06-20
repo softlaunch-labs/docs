@@ -1,47 +1,131 @@
 ---
 title: "Quickstart"
-description: "Begin with a guide on the fastest path to a successful outcome"
+description: "Create your first flag and evaluate it from an SDK."
 ---
 
-Describe how someone begins using your product. What is the first thing they need to do? Are there any prerequisites?
-
-A quickstart should take someone from zero to using your product. They'll get a quick win and a sense of what they can accomplish.
+This guide takes you from zero to a flag you can read in your app.
 
 ## Prerequisites
 
-Before you begin, you must have:
+- A [Softlaunch account](https://app.softlaunch.so)
+- Node.js 18 or later for the SDK examples
 
-- Requirement one (for example, Node.js 18+, a free account, an API key)
-- Requirement two (for example, a compatible device, a compatible browser, a compatible operating system)
-
-## Get started
+## Create a flag
 
 <Steps>
-  <Step title="Install">
-    Describe how to install your product or sign up.
-
-    ```bash
-    npm install your-package
-    ```
+  <Step title="Sign in">
+    Open the [dashboard](https://app.softlaunch.so). A new account starts with an organization and two environments, **Production** and **Staging**.
   </Step>
-  <Step title="Configure">
-    Describe any setup or configuration needed before first use.
-
-    ```bash
-    your-cli init
-    ```
+  <Step title="Create a flag">
+    Create a flag named `checkout-redesign` with the **boolean** type. Boolean flags return `true` or `false` — the simplest way to gate a feature.
   </Step>
-  <Step title="Run it">
-    Show the first thing a user does to see it working.
-
-    ```bash
-    your-cli start
-    ```
+  <Step title="Enable it">
+    In an environment, turn the flag on and choose the variation it serves. Changes take effect for connected SDKs in real time.
   </Step>
 </Steps>
 
-<Tip>
-  Give people a way to get help. This could be a link to a support page, a chat with a customer support agent, or a forum for your product.
+## Get your SDK key
 
-  Example: Need help? Reach out to us at [support@yourcompany.com](mailto:support@yourcompany.com).
-</Tip>
+Every environment has its own SDK keys. Open the **Environments** page and copy a key:
+
+- A **client key** (prefix `slc_`) is safe to ship in browsers, mobile apps, and other public clients.
+- A **server key** (prefix `sls_`) is for trusted backends only.
+
+Use the client key for the examples below.
+
+<Note>
+  Keep server keys secret. Only client keys belong in code that runs on a user's device.
+</Note>
+
+## Evaluate the flag
+
+Install an SDK and read the flag. You always pass a **default value** — the SDK returns it while the configuration is loading, if the flag is missing, or if its type doesn't match.
+
+<Tabs>
+  <Tab title="React">
+    <CodeGroup>
+      ```bash npm
+      npm install @softlaunch/react
+      ```
+
+      ```bash pnpm
+      pnpm add @softlaunch/react
+      ```
+
+      ```bash yarn
+      yarn add @softlaunch/react
+      ```
+    </CodeGroup>
+
+    Wrap your app in the provider, then read the flag with a hook:
+
+    ```tsx
+    import { SoftlaunchProvider, useBooleanFlag } from "@softlaunch/react";
+
+    function App() {
+      return (
+        <SoftlaunchProvider sdkKey="slc_...">
+          <Checkout />
+        </SoftlaunchProvider>
+      );
+    }
+
+    function Checkout() {
+      const { value: showRedesign } = useBooleanFlag(
+        "checkout-redesign", // flag key
+        "user-123", // subject key (a stable user identifier)
+        { plan: "pro" }, // attributes used for targeting
+        false, // default value
+      );
+
+      return showRedesign ? <NewCheckout /> : <OldCheckout />;
+    }
+    ```
+  </Tab>
+  <Tab title="JavaScript">
+    <CodeGroup>
+      ```bash npm
+      npm install @softlaunch/js
+      ```
+
+      ```bash pnpm
+      pnpm add @softlaunch/js
+      ```
+
+      ```bash yarn
+      yarn add @softlaunch/js
+      ```
+    </CodeGroup>
+
+    Initialize a client, then read the flag:
+
+    ```ts
+    import { init } from "@softlaunch/js";
+
+    const client = init({ sdkKey: "slc_..." });
+    await client.waitUntilReady();
+
+    const showRedesign = client.getBooleanFlag(
+      "checkout-redesign", // flag key
+      "user-123", // subject key (a stable user identifier)
+      { plan: "pro" }, // attributes used for targeting
+      false, // default value
+    );
+
+    if (showRedesign) {
+      renderNewCheckout();
+    }
+    ```
+  </Tab>
+</Tabs>
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="Core concepts" icon="book-open" href="/concepts/feature-flags">
+    Learn about flag types, environments, and targeting.
+  </Card>
+  <Card title="SDK reference" icon="code" href="/sdks/overview">
+    Explore the full SDK API and available methods.
+  </Card>
+</CardGroup>

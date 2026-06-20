@@ -1,0 +1,35 @@
+---
+title: "Environments & SDK keys"
+description: "Isolate flag configuration per environment and connect SDKs securely."
+---
+
+An **environment** is an isolated copy of your flag configuration. Every organization starts with **Production** and **Staging**, and you can add more.
+
+The same flags exist across all environments, but each environment configures them independently. You might enable a flag at 100% in Staging while it's still off in Production.
+
+## SDK keys
+
+Each environment has its own **SDK keys**. A key tells an SDK which environment to read and how to connect. There are two kinds:
+
+<CardGroup cols={2}>
+  <Card title="Client key" icon="globe">
+    Prefix `slc_`. Safe to ship in browsers, mobile apps, and other public clients. Its configuration is served in an obfuscated form.
+  </Card>
+  <Card title="Server key" icon="server">
+    Prefix `sls_`. For trusted backends only. Reads the full configuration and must be kept secret.
+  </Card>
+</CardGroup>
+
+Find both keys on the **Environments** page. Choose the key that matches where your code runs.
+
+<Warning>
+  Never ship a server key (`sls_`) in client-side code. Use a client key (`slc_`) for anything that runs on a user's device.
+</Warning>
+
+## Choosing an environment
+
+Point your development and staging builds at a non-production environment's key, and your production build at the Production key. Because configuration is isolated per environment, you can test flag changes safely before they reach real users.
+
+<Note>
+  An environment's configuration is independent. Changing a flag in Staging never affects Production.
+</Note>
