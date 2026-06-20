@@ -1,0 +1,110 @@
+---
+title: "Commands"
+description: "Reference for every Softlaunch CLI command."
+---
+
+Run `softlaunch --help`, or `softlaunch <command> --help`, for usage at any time. Every command accepts `--json` and `--no-color`.
+
+## Authentication
+
+### `softlaunch login`
+
+Sign in with an email one-time code.
+
+```bash
+softlaunch login
+```
+
+### `softlaunch logout`
+
+Remove your stored credentials.
+
+```bash
+softlaunch logout
+```
+
+### `softlaunch whoami`
+
+Show the signed-in account and the selected organization.
+
+```bash
+softlaunch whoami
+```
+
+## Organizations
+
+### `softlaunch orgs list`
+
+List the organizations you belong to.
+
+```bash
+softlaunch orgs list
+```
+
+### `softlaunch orgs use`
+
+Select the active organization for later commands.
+
+```bash
+softlaunch orgs use <organization-id>
+```
+
+## Flags
+
+### `softlaunch flags list`
+
+List flags with their status in each environment.
+
+```bash
+softlaunch flags list
+```
+
+### `softlaunch flags get`
+
+Show a flag's variations and per-environment configuration.
+
+```bash
+softlaunch flags get checkout-redesign
+```
+
+### `softlaunch flags create`
+
+Create a flag. Choose a `--type` of `boolean`, `string`, `integer`, `numeric`, or `json`.
+
+```bash
+softlaunch flags create --name "Checkout redesign" --key checkout-redesign --type boolean
+```
+
+### `softlaunch flags toggle`
+
+Enable or disable a flag in one environment.
+
+```bash
+softlaunch flags toggle checkout-redesign on --env production
+```
+
+## Environments
+
+### `softlaunch envs list`
+
+List environments and their SDK keys.
+
+```bash
+softlaunch envs list
+```
+
+## Evaluate
+
+### `softlaunch eval`
+
+Evaluate a flag for a subject using the configuration an SDK key points to. This returns the same result an SDK would. Pass [targeting attributes](/concepts/targeting) with repeated `--attr key=value` flags.
+
+```bash
+softlaunch eval checkout-redesign --subject user-123 --attr plan=pro --sdk-key slc_...
+```
+
+Set `SOFTLAUNCH_SDK_KEY` to omit `--sdk-key`.
+
+<Note>
+  `eval` needs only an SDK key, not a sign-in. Use a client key (`slc_`) to evaluate the obfuscated client configuration, or a server key (`sls_`) for the full configuration.
+</Note>

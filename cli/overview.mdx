@@ -1,0 +1,78 @@
+---
+title: "CLI overview"
+description: "Manage feature flags and environments from your terminal."
+---
+
+The Softlaunch CLI manages flags, environments, and organizations from your terminal, and evaluates flags without writing code. Use it for scripting, automation, and quick changes alongside the [dashboard](https://app.softlaunch.so).
+
+## Install
+
+The CLI requires Node.js 22 or later.
+
+<CodeGroup>
+  ```bash npm
+  npm install -g @softlaunch/cli
+  ```
+
+  ```bash pnpm
+  pnpm add -g @softlaunch/cli
+  ```
+
+  ```bash yarn
+  yarn global add @softlaunch/cli
+  ```
+</CodeGroup>
+
+The installed command is `softlaunch`. To run it without installing, use `npx @softlaunch/cli <command>`.
+
+## Sign in
+
+Authenticate with your email. The CLI sends a one-time code and stores your session locally.
+
+```bash
+softlaunch login
+```
+
+Confirm the account you're signed in as:
+
+```bash
+softlaunch whoami
+```
+
+## Select an organization
+
+Most commands act on a single organization. List the ones you belong to, then select one:
+
+```bash
+softlaunch orgs list
+softlaunch orgs use <organization-id>
+```
+
+The CLI remembers your selection for later commands. Override it on any command with `--org <organization-id>`.
+
+## Output
+
+Every command supports `--json` for machine-readable output, which is useful in scripts:
+
+```bash
+softlaunch flags list --json
+```
+
+Add `--no-color` to disable colored output.
+
+## Configuration
+
+Set these environment variables to provide defaults:
+
+| Variable | Description |
+| --- | --- |
+| `SOFTLAUNCH_ORG` | Default organization id, used when `--org` is omitted. |
+| `SOFTLAUNCH_SDK_KEY` | Default SDK key for `softlaunch eval`. |
+
+Your credentials are stored under `~/.softlaunch`.
+
+## Next steps
+
+<Card title="Commands" icon="terminal" href="/cli/commands">
+  See every command and its options.
+</Card>

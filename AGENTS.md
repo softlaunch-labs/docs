@@ -34,6 +34,6 @@
 - **Product-facing only.** Document what a user does and observes — never internal implementation, architecture internals, or engineering decisions.
 - **Abstract the data layer.** Describe database-per-tenant isolation and CDN-backed local evaluation conceptually. Do not name the underlying database, storage, or infrastructure vendors.
 - **No UI walkthroughs or screenshots yet.** The dashboard UI is evolving; keep dashboard steps high-level and text-only.
-- **No CLI docs yet** — the CLI is in progress and will be documented separately.
+- **CLI docs** live under `cli/`. Document commands as a user runs them, with the same product-facing boundaries (no internal implementation).
 - **No self-hosting docs yet** — covered later, once there is a tested guide.
 - Only document shipped SDKs (`@softlaunch/react`, `@softlaunch/js`). Reference other SDKs as "coming soon" only.
