@@ -3,9 +3,9 @@
   "theme": "mint",
   "name": "Softlaunch",
   "colors": {
-    "primary": "#6366F1",
-    "light": "#818CF8",
-    "dark": "#4F46E5"
+    "primary": "#5e2dec",
+    "light": "#7e3af2",
+    "dark": "#3521cf"
   },
   "favicon": "/favicon.svg",
   "navigation": {
